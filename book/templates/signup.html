@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signup</title>
+    <!-- <link rel="stylesheet" href="scss.css"> -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .signup-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+      }
+
+      .signup-box {
+        background-color: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #2874f0;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"],
+      input[type="tel"] {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+
+      input[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        background-color: #2874f0;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #165cb0;
+      }
+
+      p {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      a {
+        color: #2874f0;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+    {% if msg != "" and msg != null %}
+    <script>
+      alert("{{msg}}");
+    </script>
+    {% endif %}
+  </head>
+  <body>
+    <div class="signup-container">
+      <div class="signup-box">
+        <h2>Signup</h2>
+        <form
+          id="signupForm"
+          onsubmit="return validateForm()"
+          action="{% url 'signup' %}"
+          ,
+          method="post"
+          ,
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <label for="fullname">Full Name:</label>
+          <input
+            type="text"
+            id="fullname"
+            name="fullname"
+            placeholder="Enter your full name"
+            required
+          />
+
+          <label for="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+          />
+
+          <label for="phone">Phone Number:</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="Enter your phone number"
+            required
+          />
+
+          <label for="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+          />
+
+          <label for="confirm_password">Confirm Password:</label>
+          <input
+            type="password"
+            id="confirm_password"
+            name="confirm_password"
+            placeholder="Confirm your password"
+            required
+          />
+
+          <input type="submit" value="Sign Up" />
+        </form>
+        <p>
+          Already have an account?
+          <a href="{% url 'loginpage' %}">Login here</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- <script src="sjs.js"></script> -->
+    <script>
+      // Function to validate the signup form
+      function validateForm() {
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirm_password").value;
+
+        // Check if passwords match
+        if (password != confirmPassword) {
+          alert("Passwords does not match!");
+          return false;
+        }
+
+        return true;
+      }
+    </script>
+  </body>
+</html>

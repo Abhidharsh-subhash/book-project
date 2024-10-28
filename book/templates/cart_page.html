@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BookStore - Shopping Cart</title>
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* General Styling */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f8f9fa; /* Updated for cart background */
+        color: #333;
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      .container {
+        width: 80%;
+        margin: auto;
+        overflow: hidden;
+      }
+
+      /* Header */
+      header {
+        background-color: #0288d1;
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+      }
+
+      header h1 {
+        font-weight: 600;
+      }
+
+      nav ul {
+        list-style: none;
+      }
+
+      nav ul li {
+        display: inline;
+        margin-right: 15px;
+      }
+
+      nav ul li a {
+        color: white;
+        text-decoration: none;
+        font-weight: 400;
+        padding: 5px 10px;
+        transition: background 0.3s, color 0.3s;
+      }
+
+      nav ul li a:hover {
+        background: white;
+        color: #0288d1;
+        border-radius: 5px;
+      }
+
+      /* Cart Section */
+      .cart-item {
+        background-color: #f1f1f1;
+        border-radius: 5px;
+        padding: 15px;
+      }
+
+      .cart-img {
+        width: 80px;
+        height: 100px;
+      }
+
+      .subtotal-box {
+        background-color: #e9ecef;
+        border-radius: 5px;
+      }
+
+      .btn-warning {
+        background-color: #ff9800;
+        border: none;
+        color: #fff;
+      }
+
+      .btn-warning:hover {
+        background-color: #e68a00;
+      }
+
+      .btn-danger {
+        background-color: #dc3545;
+      }
+
+      .btn-danger:hover {
+        background-color: #c82333;
+      }
+
+      /* Free Shipping Alert Styling */
+      #free-shipping-message {
+        font-size: 1.1rem;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      /* Profile Section */
+      .profile-container {
+        background-color: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        width: 100%;
+        margin: 40px auto;
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="tel"],
+      select,
+      textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+
+      textarea {
+        resize: vertical;
+        height: 80px;
+      }
+
+      input[type="submit"] {
+        width: 100%;
+        padding: 15px;
+        background-color: #00bd56;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #bab5f6;
+      }
+
+      /* Footer */
+      footer {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 15px 0;
+        margin-top: auto;
+      }
+    </style>
+
+    {% if msg != "" and msg != null %}
+    <script>
+      alert("{{msg}}");
+    </script>
+    {% endif %}
+  </head>
+  <body>
+    <a
+      style="
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 10px 20px;
+        background-color: #ff4500;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+      "
+      href="{% url 'logout' %}"
+    >
+      Logout
+    </a>
+
+    <header>
+      <div class="container">
+        <h1>BookStore</h1>
+        <nav>
+          <ul>
+            <li><a href="{% url 'homepage' %}">Home</a></li>
+            <li><a href="{% url 'orderhistorypage' %}">Order History</a></li>
+            <li><a href="">Cart</a></li>
+            <li><a href="{% url 'profile' %}">Profile</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Shopping Cart Section -->
+    <section class="container mt-5">
+      <h1 class="mb-4">Shopping Cart</h1>
+      {% for d in data %}
+      <div class="cart-item row align-items-center mb-3">
+        <div class="col-md-2 text-center">
+          <img
+            src="../{{d.book.image}}"
+            alt="Book Image"
+            class="cart-img img-thumbnail"
+          />
+        </div>
+        <div class="col-md-6">
+          <h5>{{d.book.title}}</h5>
+          <p class="text-muted">
+            Book written by {{d.book.author}}, Published by {{d.book.publisher}}
+          </p>
+          <span class="badge badge-success">In Stock</span>
+        </div>
+        <div class="col-md-2 text-center">
+          <h5 class="item-price">₹{{d.book.price}}</h5>
+        </div>
+        <div class="col-md-2 text-center">
+          <div class="input-group quantity-selector">
+            <a href="{% url 'minus_cart' %}?id={{d.id}}" class="btn btn-outline-secondary" type="button">-</a>
+            <input 
+                type="text" 
+                name="quantity" 
+                class="form-control text-center" 
+                value="{{ d.quantity }}" 
+                id="quantity-{{ d.id }}" 
+                readonly>
+            <a href="{% url 'plus_cart' %}?id={{d.id}}" class="btn btn-outline-secondary" type="button">+</a>
+        </div>
+          <form action="{% url 'remove_from_cart' %}" method="post" enctype="multipart/form-data" class="mt-2">
+            {% csrf_token %}
+            <input type="hidden" name="cart_item_id" value="{{ d.id }}">
+            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+        </form>
+        </div>
+      </div>
+      {% endfor %}
+    </section>
+  </body>
+</html>

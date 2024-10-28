@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - BookStore</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Custom styling for login page */
+      body {
+        background-color: #f3f4f6;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .login-container {
+        background-color: #fff;
+        padding: 80px; /* Increased padding */
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        max-width: 600px; /* Increased max-width */
+        width: 100%;
+      }
+
+      .login-title {
+        color: white;
+        background-image: linear-gradient(
+          45deg,
+          #ff7e5f,
+          #feb47b
+        ); /* Pink to Orange */
+        padding: 10px 20px; /* Reduced padding to fit text on one line */
+        border-radius: 8px;
+        font-size: 2rem; /* Slightly smaller font size */
+        font-weight: bold;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+        text-transform: uppercase;
+        margin-bottom: 30px;
+        white-space: nowrap; /* Ensures text stays on one line */
+      }
+
+      /* Adjust font size for smaller screens */
+      @media (max-width: 768px) {
+        .login-title {
+          font-size: 4vw; /* Larger font size for smaller screens */
+          padding: 8px 16px; /* Adjust padding */
+        }
+      }
+
+      @media (max-width: 480px) {
+        .login-title {
+          font-size: 5vw; /* Even larger font size for extra-small screens */
+          padding: 6px 12px;
+        }
+      }
+
+      .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      }
+
+      .login-btn {
+        background-color: #007bff;
+        color: white;
+        width: 100%;
+        padding: 14px; /* Increased button padding */
+        font-size: 1.1rem; /* Slightly larger font size */
+      }
+
+      .login-btn:hover {
+        background-color: #0056b3;
+      }
+
+      /* Positioning for Forgot Password Link */
+      .forgot-password-container {
+        text-align: right;
+        margin-top: 12px; /* Added space above */
+        margin-bottom: 32px;
+      }
+
+      .forgot-password-link {
+        font-size: 0.9rem;
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      .forgot-password-link:hover {
+        text-decoration: underline;
+      }
+
+      /* Styling for the bottom text */
+      .text-center {
+        margin-top: 32px;
+      }
+
+      .text-center p {
+        font-size: 0.95rem;
+        color: #666;
+      }
+
+      .text-center a.signup-link {
+        color: #007bff;
+        font-weight: bold;
+      }
+
+      .text-center a.signup-link:hover {
+        text-decoration: underline;
+      }
+    </style>
+    {% if msg != "" and msg != null %}
+    <script>
+      alert("{{msg}}");
+    </script>
+    {% endif %}
+  </head>
+  <body>
+    <div class="container d-flex justify-content-center">
+      <div class="login-container">
+        <h2 class="login-title">Login to BookStore</h2>
+        <form id="loginForm" onsubmit="return validateForm()" method="post", action="{% url 'login' %}", enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-4">
+            <label for="username" class="form-label">Email</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person"></i></span>
+              <input
+                type="text"
+                class="form-control"
+                id="username", name="email"
+                placeholder="Enter your username"
+                required
+              />
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-lock"></i></span>
+              <input
+                type="password"
+                class="form-control"
+                id="password", name="password"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+            <div class="forgot-password-container">
+              <a
+                href="{% url 'forgotpasswordpage' %}"
+                class="forgot-password-link"
+                >Forgot Password?</a
+              >
+            </div>
+          </div>
+          <button type="submit" class="btn login-btn">Login</button>
+        </form>
+        <div class="text-center">
+          <p>
+            Don't have an account?
+            <a href="{% url 'signuppage' %}" class="signup-link">Sign Up</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // JavaScript validation for enhanced user experience
+      function validateForm() {
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        // Basic validation
+        if (!username || !password) {
+          alert("Please fill in both the username and password.");
+          return false;
+        }
+
+        // Password length validation
+        // if (password.length < 6) {
+        //   alert("Password must be at least 6 characters long.");
+        //   return false;
+        // }
+      }
+    </script>
+  </body>
+</html>
