@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Users, Book_categories, Books, cartitems
+from .models import Users, Book_categories, Books, cartitems, order, orderitems
 
 # Create your views here.
 
@@ -24,7 +24,38 @@ def homepage(request):
 
 def orderpage(request):
     msg = request.GET.get("msg", "")
-    return render(request, 'orderpage.html', {"msg": msg})
+    quantity = request.GET['q']
+    price = request.GET['p']
+    grand_total = request.GET['g']
+    return render(request, 'orderpage.html', {
+        "msg": msg,
+        "quantity": quantity,
+        "price": price,
+        "grand_total": grand_total
+    })
+
+
+def placeorder(request):
+    if request.method == 'POST':
+        address = request.POST.get('address')
+        quantity = request.POST.get('quantity')
+        price = request.POST.get('price')
+        grand_total = request.POST.get('grand_total')
+        try:
+            user_id = request.session.get('id')
+            cart_items = cartitems.objects.filter(user=user_id)
+            user = Users.objects.get(id=user_id)
+            new_order = order.objects.create(
+                user=user, address=address, total_quantity=quantity, total_price=price, grand_total=grand_total)
+            for item in cart_items:
+                orderitems.objects.create(
+                    order=new_order, book=item.book, quantity=item.quantity)
+                item.delete()
+            return redirect('/homepage?msg=Order placed successfully')
+        except Exception as e:
+            print(e)
+            return redirect('/cartpage?msg=Something went wrong')
+    return redirect('/cartpage?msg=Please try again')
 
 
 def trackorderpage(request):
@@ -131,10 +162,20 @@ def setpassword(request):
 
 
 def cartpage(request):
+    msg = request.GET.get("msg", "")
     if request.session.get('email'):
         user_id = request.session.get('id')
         cart_items = cartitems.objects.filter(user=user_id)
-        return render(request, 'cart_page.html', {'data': cart_items})
+        total_quantity = sum(int(item.quantity) for item in cart_items)
+        total_price = sum(int(item.quantity) * int(item.book.price)
+                          for item in cart_items)
+        return render(request, 'cart_page.html', {
+            'data': cart_items,
+            'total_quantity': total_quantity,
+            'total_price': total_price,
+            'grand_total': total_price+55,
+            'msg': msg
+        })
     return redirect('/loginpage?msg=Something went wrong, try again!')
 
 

@@ -12,3 +12,5 @@ class Users(admin.ModelAdmin):
 
 admin.site.register(models.Book_categories)
 admin.site.register(models.Books)
+admin.site.register(models.order)
+admin.site.register(models.orderitems)

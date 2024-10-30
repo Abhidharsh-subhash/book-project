@@ -43,5 +43,16 @@ class cartitems(models.Model):
 
 
 class order(models.Model):
-    user = models.ForeignKey(Users, models.SET_NULL,
-                             related_name='order_user', null=True)
+    user = models.ForeignKey(Users, on_delete=models.SET_NULL, related_name='order_user', null=True)
+    address = models.TextField(null=True, blank=True)
+    date = models.DateTimeField()
+    total_quantity = models.PositiveBigIntegerField(null=True, blank=True)
+    total_price = models.PositiveBigIntegerField(null=True, blank=True)
+    grand_total = models.PositiveBigIntegerField(null=True, blank=True)
+
+
+class orderitems(models.Model):
+    order = models.ForeignKey(order, on_delete=models.CASCADE,
+                              related_name='order_order')
+    book = models.ForeignKey(Books, models.CASCADE, related_name='order_book')
+    quantity = models.PositiveBigIntegerField()

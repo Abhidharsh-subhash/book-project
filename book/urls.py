@@ -27,6 +27,7 @@ urlpatterns = [
     path('remove_from_cart', views.remove_from_cart, name='remove_from_cart'),
     path('plus_cart', views.plus_cart, name='plus_cart'),
     path('minus_cart', views.minus_cart, name='minus_cart'),
-    path('category_filter', views.category_filter, name='category_filter')
+    path('category_filter', views.category_filter, name='category_filter'),
+    path('placeorder', views.placeorder, name='placeorder')
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

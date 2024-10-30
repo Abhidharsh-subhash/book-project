@@ -175,6 +175,11 @@
         margin-top: auto;
       }
     </style>
+    {% if msg != "" and msg != null %}
+    <script>
+      alert("{{msg}}");
+    </script>
+    {% endif %}
   </head>
   <body>
     <a
