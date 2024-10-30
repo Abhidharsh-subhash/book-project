@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from .models import Users, Book_categories, Books, cartitems, order, orderitems
-
+from django.db.models import F
+from datetime import datetime
+import pytz
 # Create your views here.
 
 
@@ -17,7 +19,7 @@ def forgot_password_page(request):
 def homepage(request):
     msg = request.GET.get("msg", "")
     categories = Book_categories.objects.all()
-    books = Books.objects.all()
+    books = Books.objects.filter(quantity__gt=0)
     return render(request, 'homepage.html', {"msg": msg, "categories": categories,
                                              "books": books})
 
@@ -45,11 +47,15 @@ def placeorder(request):
             user_id = request.session.get('id')
             cart_items = cartitems.objects.filter(user=user_id)
             user = Users.objects.get(id=user_id)
+            india_timezone = pytz.timezone('Asia/Kolkata')
+            current_time_in_india = datetime.now(india_timezone)
             new_order = order.objects.create(
-                user=user, address=address, total_quantity=quantity, total_price=price, grand_total=grand_total)
+                user=user, date=current_time_in_india, address=address, total_quantity=quantity, total_price=price, grand_total=grand_total)
             for item in cart_items:
                 orderitems.objects.create(
                     order=new_order, book=item.book, quantity=item.quantity)
+                Books.objects.filter(id=item.book.id).update(
+                    quantity=F('quantity') - item.quantity)
                 item.delete()
             return redirect('/homepage?msg=Order placed successfully')
         except Exception as e:
@@ -60,7 +66,10 @@ def placeorder(request):
 
 def trackorderpage(request):
     msg = request.GET.get("msg", "")
-    return render(request, 'trackorderpage.html', {"msg": msg})
+    id = request.GET.get('id')
+    ord = order.objects.get(id=id)
+    order_items = orderitems.objects.filter(order=id)
+    return render(request, 'trackorderpage.html', {"msg": msg, 'order': ord, 'order_items': order_items})
 
 
 def profile(request):
@@ -208,7 +217,10 @@ def remove_from_cart(request):
 
 
 def orderhistorypage(request):
-    return render(request, 'orderhistorypage.html')
+    msg = request.GET.get("msg", "")
+    user_id = request.session.get('id')
+    orders = order.objects.filter(user=user_id)
+    return render(request, 'orderhistorypage.html', {"msg": msg, "orders": orders})
 
 
 def plus_cart(request):

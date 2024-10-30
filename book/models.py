@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 
@@ -43,12 +44,28 @@ class cartitems(models.Model):
 
 
 class order(models.Model):
-    user = models.ForeignKey(Users, on_delete=models.SET_NULL, related_name='order_user', null=True)
+    PLACED = "Placed"
+    CONFIRMED = "Confirmed"
+    TRANSMITTED = "Transmitted"
+    DELIVERED = "Delivered"
+    CANCELLED = "Cancelled"
+    STATUS_CHOICES = [
+        (PLACED, _("Placed")),
+        (CONFIRMED, _("Confirmed")),
+        (TRANSMITTED, _("Transmitted")),
+        (DELIVERED, _("DELIVERED")),
+        (CANCELLED, _("Cancelled"))
+    ]
+    user = models.ForeignKey(
+        Users, on_delete=models.SET_NULL, related_name='order_user', null=True)
     address = models.TextField(null=True, blank=True)
-    date = models.DateTimeField()
+    date = models.DateTimeField(null=True, blank=True)
     total_quantity = models.PositiveBigIntegerField(null=True, blank=True)
     total_price = models.PositiveBigIntegerField(null=True, blank=True)
     grand_total = models.PositiveBigIntegerField(null=True, blank=True)
+    status = models.CharField(choices=STATUS_CHOICES,
+                              default=PLACED, max_length=20)
+    reason = models.TextField(blank=True, null=True)
 
 
 class orderitems(models.Model):

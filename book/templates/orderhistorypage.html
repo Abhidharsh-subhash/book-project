@@ -198,48 +198,24 @@
           </tr>
         </thead>
         <tbody>
+          {% if orders %}
+          {% for order in orders %}
           <tr>
-            <td>123456789</td>
-            <td>2024-09-25</td>
-            <td>5</td>
-            <td>₹1200</td>
+            <td>{{order.id}}</td>
+            <td>{{order.date.date}}</td>
+            <td>{{order.total_quantity}}</td>
+            <td>₹{{order.grand_total}}</td>
             <td>
               <a
-                href="{% url 'trackorderpage' %}"
+                href="{% url 'trackorderpage' %}?id={{order.id}}"
                 class="status-button"
               >
                 Track Order
               </a>
             </td>
           </tr>
-          <tr>
-            <td>987654321</td>
-            <td>2024-09-18</td>
-            <td>3</td>
-            <td>₹850</td>
-            <td>
-              <a
-                href="{% url 'trackorderpage' %}"
-                class="status-button"
-              >
-                Track Order
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>456123789</td>
-            <td>2024-09-10</td>
-            <td>2</td>
-            <td>₹500</td>
-            <td>
-              <a
-                href="{% url 'trackorderpage' %}"
-                class="status-button"
-              >
-                Track Order
-              </a>
-            </td>
-          </tr>
+          {% endfor %}
+          {% endif %}
         </tbody>
       </table>
     </section>

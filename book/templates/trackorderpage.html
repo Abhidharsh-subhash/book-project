@@ -141,7 +141,7 @@
       }
 
       .progress-step:not(:last-child)::after {
-        content: '';
+        content: "";
         position: absolute;
         top: 50%;
         right: -50%;
@@ -206,24 +206,64 @@
     <section id="track-order" class="track-container">
       <h1>Track Your Order</h1>
       <div class="order-details">
-        <p><strong>Order Number:</strong> <span id="order-number">123456789</span></p>
-        <p><strong>Order Date:</strong> <span id="order-date">2024-10-20</span></p>
-        <p><strong>Expected Arrival Date:</strong> <span id="arrival-date">2024-10-30</span></p>
+        <p>
+          <strong>Order Number:</strong>
+          <span id="order-number">{{order.id}}</span>
+        </p>
+        <p>
+          <strong>Order Date:</strong>
+          <span id="order-date">{{order.date.date}}</span>
+        </p>
       </div>
 
       <div class="order-summary">
-        <p><strong>Total Number of Items:</strong> <span id="total-items">3</span></p>
-        <p><strong>Total Product Cost:</strong> ₹<span id="product-cost">1500</span></p>
-        <p><strong>Delivery Charge:</strong> ₹<span id="delivery-charge">50</span></p>
-        <p><strong>Total Charge:</strong> ₹<span id="total-charge">1550</span></p>
+        <p>
+          <strong>Total Number of Items:</strong>
+          <span id="total-items">{{order.total_quantity}}</span>
+        </p>
+        <p>
+          <strong>Total Product Cost:</strong> ₹<span id="product-cost"
+            >{{order.total_price}}</span
+          >
+        </p>
+        <p>
+          <strong>Delivery Charge:</strong> ₹<span id="delivery-charge"
+            >55</span
+          >
+        </p>
+        <p>
+          <strong>Total Charge:</strong> ₹<span id="total-charge"
+            >{{order.grand_total}}</span
+          >
+        </p>
+        <p>{{order.status}}</p>
       </div>
 
       <div class="progress-container">
         <div class="progress-bar">
-          <div class="progress-step step-active">Order Confirmed</div>
-          <div class="progress-step">Shipped</div>
-          <div class="progress-step">Out for Delivery</div>
+          {% if order.status == "Placed" %}
+          <div class="progress-step step-active">Order Placed</div>
+          <div class="progress-step">Order Confirmed</div>
+          <div class="progress-step">Transmitted</div>
           <div class="progress-step">Delivered</div>
+          {% elif order.status == "Confirmed" %}
+          <div class="progress-step">Order Placed</div>
+          <div class="progress-step step-active">Order Confirmed</div>
+          <div class="progress-step">Transmitted</div>
+          <div class="progress-step">Delivered</div>
+          {% elif order.status == "Transmitted" %}
+          <div class="progress-step">Order Placed</div>
+          <div class="progress-step">Order Confirmed</div>
+          <div class="progress-step step-active">Transmitted</div>
+          <div class="progress-step">Delivered</div>
+          {% elif order.status == "DELIVERED" %}
+          <div class="progress-step">Order Placed</div>
+          <div class="progress-step">Order Confirmed</div>
+          <div class="progress-step">Transmitted</div>
+          <div class="progress-step step-active">Delivered</div>
+          {% elif order.status == "CANCELLED" %}
+          <div class="progress-step step-active">Cancelled</div>
+          {% endif %}
         </div>
       </div>
     </section>
@@ -235,9 +275,11 @@
     </footer>
 
     <script>
-      document.getElementById('track-button').addEventListener('click', function() {
-        alert('Tracking feature is under construction!');
-      });
+      document
+        .getElementById("track-button")
+        .addEventListener("click", function () {
+          alert("Tracking feature is under construction!");
+        });
     </script>
   </body>
 </html>
