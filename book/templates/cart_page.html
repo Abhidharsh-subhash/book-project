@@ -237,7 +237,7 @@
   {% for d in data %}
   <div class="cart-item row align-items-center mb-3">
     <div class="col-md-2 text-center">
-      <img src="../{{ d.book.image }}" alt="Book Image" class="cart-img img-thumbnail" />
+      <img src="../books/{{ d.book.image }}" alt="Book Image" class="cart-img img-thumbnail" />
     </div>
     <div class="col-md-6">
       <h5>{{ d.book.title }}</h5>
@@ -267,7 +267,7 @@
   <!-- Total Summary Section -->
   {% if total_quantity > 0 %}
   <div class="subtotal-box p-4 mt-4">
-    <h4>Cart Summary</h4>
+    <h4>Cart Summary</h4> 
     <p><strong>Total Quantity: </strong>{{total_quantity}}</p>
     <p><strong>Product Cost: </strong>{{total_price}}</p>
     <p><strong>Delivery Charge: </strong>55</p>
